@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bruma & Residuo — Dos Poderes, Un Origen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Literata:ital,wght@0,300;0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#161f36;
+    --void-deep:#1d2942;
+    --silver-bright:#e7edf3;
+    --silver:#9fb2c2;
+    --silver-dim:#5c6f80;
+    --corrupt:#1c1220;
+    --corrupt-deep:#0a0710;
+    --black-abs:#030105;
+    --wine:#8a3350;
+    --wine-bright:#b8567a;
+    --ivory:#efe9de;
+    --ivory-dim:#a89f8f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--void);
+    color:var(--ivory);
+    font-family:'Literata', serif;
+    font-weight:300;
+    overflow-x:hidden;
+    line-height:1.6;
+  }
+  ::selection{background:var(--wine); color:var(--silver-bright);}
+
+  html{ scrollbar-width:thin; scrollbar-color: var(--silver-dim) var(--void); }
+  ::-webkit-scrollbar{ width:11px; }
+  ::-webkit-scrollbar-track{ background:var(--void); }
+  ::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg, var(--silver-bright) 0%, var(--silver-dim) 45%, var(--wine) 100%);
+    border-radius:7px;
+    border:2px solid var(--void);
+  }
+  ::-webkit-scrollbar-thumb:hover{
+    background:linear-gradient(180deg, var(--silver-bright) 0%, var(--wine-bright) 60%, var(--wine) 100%);
+  }
+
+  h1,h2,h3, .display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+  }
+  a{color:inherit;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- ambient background canvas ---------- */
+  #ambient{
+    position:fixed; inset:0; width:100%; height:100%;
+    z-index:0; pointer-events:none;
+  }
+
+  .wrap{ position:relative; z-index:1; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    position:relative;
+    padding:2rem 1.5rem;
+  }
+  .hero .seam-title{
+    font-size:clamp(2.6rem, 9vw, 6.4rem);
+    line-height:0.95;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:0 0.4em;
+  }
+  .hero .seam-title .silver-word{
+    color:var(--silver-bright);
+    text-shadow:0 0 28px rgba(160,190,220,0.35);
+  }
+  .hero .seam-title .amp{
+    color:var(--wine-bright);
+    font-style:italic;
+    font-weight:500;
+  }
+  .hero .seam-title .black-word{
+    color:var(--ivory-dim);
+    -webkit-text-stroke:1px rgba(170,90,120,0.5);
+  }
+  .hero .subtitle{
+    margin-top:1.4rem;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.08em;
+    color:var(--ivory-dim);
+    max-width:36ch;
+  }
+  .hero .scroll-cue{
+    position:absolute; bottom:2.4rem;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.2em;
+    color:var(--ivory-dim);
+    opacity:0.6;
+    animation:pulseCue 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseCue{ 0%,100%{opacity:0.25;} 50%{opacity:0.7;} }
+
+  /* ---------- SECTION shell ---------- */
+  section.power{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    align-items:center;
+    gap:3rem;
+    padding:6rem 6vw;
+    position:relative;
+  }
+  section.power.reverse{ direction:rtl; }
+  section.power.reverse > *{ direction:ltr; }
+
+  .power-visual{
+    position:relative;
+    aspect-ratio:1/1;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .power-visual svg{ width:100%; height:100%; max-width:420px; }
+
+  .power-copy{
+    opacity:0; transform:translateY(28px);
+    transition:opacity 0.9s ease, transform 0.9s ease;
+  }
+  .power-copy.in-view{ opacity:1; transform:translateY(0); }
+
+  .power-copy h2{ font-size:clamp(1.9rem,4vw,3rem); margin:0.4rem 0 1rem; }
+  .tabatha-block h2{ color:var(--silver-bright); }
+  .oliver-block h2{ color:var(--ivory); }
+  .tabatha-block .eyebrow{ color:var(--silver); }
+  .oliver-block .eyebrow{ color:var(--wine-bright); }
+
+  .power-copy p{ max-width:52ch; margin-bottom:1rem; color:var(--ivory-dim); font-size:1rem;}
+  .power-copy p.flavor{
+    font-family:'Fraunces', serif; font-style:italic; font-weight:400;
+    font-size:1.08rem; color:var(--ivory); opacity:0.85;
+    margin-bottom:1.4rem;
+  }
+  .power-copy p strong{ color:var(--ivory); font-weight:500; }
+
+  .stat-row{
+    display:flex; flex-wrap:wrap; gap:0.6rem 1.4rem;
+    margin-top:1.6rem; font-family:'IBM Plex Mono', monospace; font-size:0.72rem;
+    letter-spacing:0.04em; color:var(--ivory-dim);
+  }
+  .stat-row span b{ color:var(--ivory); display:block; font-size:0.78rem; letter-spacing:0.02em; margin-top:0.15rem;}
+
+  .cap-list{ list-style:none; margin-top:1.2rem; }
+  .cap-list li{
+    position:relative; padding-left:1.3rem; margin-bottom:0.55rem;
+    font-size:0.95rem; color:var(--ivory-dim);
+  }
+  .cap-list li::before{
+    content:"—"; position:absolute; left:0; color:var(--wine-bright);
+  }
+  .cap-list.negative li::before{ content:"×"; color:var(--silver-dim); }
+
+  /* ---------- COMPARISON TABLE ---------- */
+  .compare{ padding:8rem 6vw 6rem; position:relative; }
+  .compare h2{
+    text-align:center; font-size:clamp(1.8rem,4vw,2.8rem);
+    margin-bottom:0.6rem; color:var(--ivory);
+  }
+  .compare .eyebrow{ display:block; text-align:center; color:var(--wine-bright); margin-bottom:0.8rem;}
+  .table-wrap{
+    max-width:920px; margin:3rem auto 0;
+    border-top:1px solid rgba(159,178,194,0.18);
+  }
+  .trow{
+    display:grid; grid-template-columns: 1fr 1.4fr 1.4fr;
+    border-bottom:1px solid rgba(159,178,194,0.12);
+    opacity:0; transform:translateY(14px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .trow.in-view{ opacity:1; transform:translateY(0); }
+  .trow > div{ padding:1.1rem 1.2rem; font-size:0.92rem; }
+  .trow .axis{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim);
+    display:flex; align-items:center;
+  }
+  .trow .t-col{ color:var(--silver-bright); border-left:1px solid rgba(159,178,194,0.12); }
+  .trow .o-col{ color:var(--ivory); border-left:1px solid rgba(159,178,194,0.12); }
+  .trow.head{ opacity:1; transform:none; transition:none; }
+  .trow.head .t-col{ font-family:'Fraunces',serif; font-weight:600; font-size:1.05rem;}
+  .trow.head .o-col{ font-family:'Fraunces',serif; font-weight:600; font-size:1.05rem;}
+
+  /* ---------- mobile mist-card comparison (alternate to the table) ---------- */
+  .mist-compare{ display:none; max-width:520px; margin:2.6rem auto 0; }
+  .mist-legend{
+    display:flex; justify-content:center; gap:1.8rem;
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem;
+    letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim);
+    margin-bottom:2rem;
+  }
+  .mist-legend .dot{
+    display:inline-block; width:9px; height:9px; border-radius:50%;
+    margin-right:0.45rem; vertical-align:middle;
+  }
+  .mist-legend .dot.silver{ background:var(--silver-bright); box-shadow:0 0 6px rgba(231,237,243,0.6); }
+  .mist-legend .dot.black{ background:var(--corrupt); border:1px solid var(--wine-bright); }
+  .axis-block{ margin-bottom:1.8rem; }
+  .axis-block .axis-label{
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--ivory-dim);
+    text-align:center; margin-bottom:0.7rem;
+  }
+  .mist-pair{ display:flex; flex-direction:column; gap:0.7rem; }
+  .mist-card{
+    padding:1rem 1.15rem; border-radius:14px; font-size:0.94rem; line-height:1.5;
+    opacity:0; transition:opacity 0.65s ease, transform 0.65s ease;
+  }
+  .mist-card.in-view{ opacity:1; transform:translateX(0) !important; }
+  .mist-card.silver{
+    background:radial-gradient(circle at 28% 25%, rgba(231,237,243,0.22), rgba(159,178,194,0.05) 72%);
+    border:1px solid rgba(231,237,243,0.22);
+    color:var(--silver-bright);
+    transform:translateX(-20px);
+  }
+  .mist-card.black{
+    background:radial-gradient(circle at 72% 75%, rgba(28,18,32,0.7), rgba(3,1,5,0.3) 72%);
+    border:1px solid rgba(138,51,80,0.35);
+    color:var(--ivory);
+    transform:translateX(20px);
+    transition-delay:0.1s;
+  }
+
+  /* ---------- RESONANCE (signature merge) ---------- */
+  .resonance{
+    min-height:160vh;
+    padding-bottom:4rem;
+    position:relative;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .resonance .rtext{
+    position:sticky; top:58vh;
+    text-align:center; max-width:44ch; margin:0 auto; padding:0 1.5rem 3rem;
+    z-index:2;
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity 0.5s ease, transform 0.5s ease;
+  }
+  .resonance .rtext .eyebrow{ color:var(--wine-bright); }
+  .resonance .rtext h2{ font-size:clamp(2rem,5vw,3.4rem); margin:0.5rem 0 1rem; }
+  .resonance .rtext p{ color:var(--ivory); font-size:1.02rem; }
+  #metaCanvas{
+    position:fixed; inset:0;
+    width:100%; height:100%;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  /* ---------- MATCHUP (what happens if they actually clash) ---------- */
+  .matchup{ padding:0 6vw 8rem; max-width:920px; margin:0 auto; position:relative; z-index:1; }
+  .clash-spacer{ min-height:150vh; position:relative; }
+  .clash-cue{
+    position:sticky; top:50vh;
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace; font-size:0.75rem;
+    letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--wine-bright);
+    opacity:0;
+    z-index:2;
+  }
+  .matchup-content{ padding-top:2rem; }
+  .matchup .eyebrow{ display:block; text-align:center; color:var(--wine-bright); margin-bottom:0.8rem; }
+  .matchup h2{
+    text-align:center; font-size:clamp(1.7rem,3.8vw,2.6rem);
+    margin-bottom:1rem; color:var(--ivory);
+  }
+  .matchup .intro{
+    max-width:56ch; margin:0 auto 3rem; text-align:center;
+    color:var(--ivory-dim); font-size:1.02rem;
+  }
+  .clash-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:1.4rem;
+  }
+  .clash-item{
+    padding:1.6rem 1.7rem; border-radius:16px;
+    background:linear-gradient(155deg, rgba(231,237,243,0.05), rgba(138,51,80,0.05));
+    border:1px solid rgba(159,178,194,0.14);
+    opacity:0; transform:translateY(16px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .clash-item.in-view{ opacity:1; transform:translateY(0); }
+  .clash-tag{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:0.7rem;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--wine-bright);
+    margin-bottom:0.6rem;
+  }
+  .clash-item p{ color:var(--ivory-dim); font-size:0.95rem; }
+  @media (max-width:820px){
+    .clash-grid{ grid-template-columns:1fr; }
+  }
+
+  @media (max-width:820px){
+    section.power{ grid-template-columns:1fr; padding:4rem 6vw; gap:2rem; }
+    section.power.reverse{ direction:ltr; }
+    .power-visual{ max-width:280px; margin:0 auto; }
+    .table-wrap{ display:none; }
+    .mist-compare{ display:block; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="ambient"></canvas>
+<canvas id="metaCanvas"></canvas>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="eyebrow" style="color:var(--ivory-dim); margin-bottom:1.2rem;">dos poderes — un mismo instante</div>
+    <h1 class="seam-title">
+      <span class="silver-word">Bruma</span>
+      <span class="amp">&</span>
+      <span class="black-word">Residuo</span>
+    </h1>
+    <p class="subtitle">Una se hereda. La otra no debería existir. Dos fichas, un mismo origen — bajá para ver cómo se enfrentan.</p>
+    <div class="scroll-cue">desplazate ↓</div>
+  </section>
+
+  <!-- TABATHA -->
+  <section class="power" id="sec-tabatha">
+    <div class="power-visual">
+      <svg viewBox="0 0 400 400" id="svg-tabatha">
+        <defs>
+          <filter id="turbSilver" x="-50%" y="-50%" width="200%" height="200%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="3" seed="7" result="noise">
+              <animate attributeName="baseFrequency" dur="14s" values="0.012 0.018;0.02 0.01;0.012 0.018" repeatCount="indefinite"/>
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="34"/>
+          </filter>
+          <radialGradient id="silverGrad" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#f2f6fa"/>
+            <stop offset="55%" stop-color="#b9c9d6"/>
+            <stop offset="100%" stop-color="#5c6f80"/>
+          </radialGradient>
+        </defs>
+        <circle cx="200" cy="205" r="128" fill="url(#silverGrad)" filter="url(#turbSilver)" opacity="0.94"/>
+        <circle cx="200" cy="205" r="128" fill="none" stroke="#e7edf3" stroke-width="0.6" opacity="0.3" filter="url(#turbSilver)"/>
+      </svg>
+    </div>
+    <div class="power-copy tabatha-block">
+      <span class="eyebrow">habilidad propia — nº 01</span>
+      <h2>Bruma Argéntea</h2>
+      <p class="flavor">No se activa desde cero. Se hereda entera.</p>
+      <p>De sangre, no de circunstancia. <strong>Plateada, brillante, de doble estado</strong> — líquida y vapor al mismo tiempo, sin perder forma nunca.</p>
+      <p>Activación voluntaria, cien por ciento. Nunca sale por reflejo ni por accidente: Tabatha la llama, y responde.</p>
+      <p>Efecto expansivo: cadenas, cuchillas, lanzas. Envuelve, atrapa, se extiende sobre el terreno. Cuanto más dura el choque, <strong>más fuerte se pone</strong> — no hay desgaste, solo acumulación.</p>
+      <p>Coste: energía mágica. Límite conocido — pasado cierto punto, ciega temporalmente a quien la invoca.</p>
+      <div class="stat-row">
+        <span>Origen<b>Hereditaria</b></span>
+        <span>Control<b>Voluntario</b></span>
+        <span>Dirección<b>Expansiva</b></span>
+        <span>Progresión<b>Se fortalece</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- OLIVER -->
+  <section class="power reverse" id="sec-oliver">
+    <div class="power-visual">
+      <svg viewBox="0 0 400 400" id="svg-oliver">
+        <defs>
+          <filter id="turbBlack" x="-60%" y="-60%" width="220%" height="220%">
+            <feTurbulence type="turbulence" baseFrequency="0.02 0.03" numOctaves="2" seed="19" result="noise2">
+              <animate attributeName="baseFrequency" dur="0.9s" values="0.02 0.03;0.05 0.01;0.015 0.04;0.02 0.03" repeatCount="indefinite"/>
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise2" scale="46"/>
+          </filter>
+        </defs>
+        <circle id="oliver-mass" cx="200" cy="200" r="92" fill="#030105" filter="url(#turbBlack)">
+          <animate attributeName="r" values="92;104;88;98;92" dur="3.6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="200" cy="200" r="92" fill="none" stroke="#8a3350" stroke-width="0.5" opacity="0.35" filter="url(#turbBlack)"/>
+      </svg>
+    </div>
+    <div class="power-copy oliver-block">
+      <span class="eyebrow">efecto no identificado — sin catalogar</span>
+      <h2>Residuo de Bruma Argéntea</h2>
+      <p class="flavor">Nadie la pidió. No tiene nombre. Igual, ahí está.</p>
+      <p>No es un poder: es un desecho. La noche del reencuentro, la Bruma Argéntea absorbió el dolor sin procesar de Oliver — Oclumancia rota, trauma crudo — y no logró digerirlo del todo. Una esquirla corrompida quedó filtrada de vuelta hacia él. <strong>No la ganó. Se le quedó alojada.</strong></p>
+      <p>Masa negra absoluta, sin brillo, alojada donde nunca debería haber un espejo de Oclumancia. Sin forma estable: <strong>pulsa</strong>, se expande y se retrae por cuenta propia, errática en su densidad.</p>
+      <p>Activación cero voluntaria. Puramente reactiva — salta ante una amenaza real o una sobrecarga emocional extrema, cuando las barreras de Oclumancia ya cedieron y no queda otra salida.</p>
+      <ul class="cap-list">
+        <li>Escudo de emergencia, fino y de corta duración</li>
+        <li>Absorción parcial de magia ambiental suelta</li>
+      </ul>
+      <ul class="cap-list negative">
+        <li>No forma cadenas, cuchillas ni lanzas</li>
+        <li>No atrapa, no se proyecta sobre el terreno</li>
+      </ul>
+      <div class="stat-row">
+        <span>Origen<b>Ajeno, no propio</b></span>
+        <span>Control<b>Reactivo</b></span>
+        <span>Dirección<b>Contractiva</b></span>
+        <span>Progresión<b>Se degrada</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="compare">
+    <span class="eyebrow">cara a cara</span>
+    <h2>Contraparte corrompida</h2>
+    <div class="table-wrap" id="table-wrap">
+      <div class="trow head">
+        <div class="axis"></div>
+        <div class="t-col">Tabatha</div>
+        <div class="o-col">Oliver</div>
+      </div>
+      <div class="trow"><div class="axis">Origen</div><div class="t-col">Habilidad hereditaria propia</div><div class="o-col">Desecho ajeno, no le pertenece</div></div>
+      <div class="trow"><div class="axis">Color</div><div class="t-col">Plateado brillante</div><div class="o-col">Negro absoluto</div></div>
+      <div class="trow"><div class="axis">Control</div><div class="t-col">Voluntario</div><div class="o-col">Reactivo, involuntario</div></div>
+      <div class="trow"><div class="axis">Costo</div><div class="t-col">Energía mágica</div><div class="o-col">Estabilidad emocional</div></div>
+      <div class="trow"><div class="axis">Dirección</div><div class="t-col">Expansiva — ataca, envuelve</div><div class="o-col">Contractiva — protege, absorbe</div></div>
+      <div class="trow"><div class="axis">Con el uso</div><div class="t-col">Se fortalece</div><div class="o-col">Se degrada</div></div>
+      <div class="trow"><div class="axis">Forma</div><div class="t-col">Estable, líquida y vaporosa</div><div class="o-col">Inestable, errática</div></div>
+      <div class="trow"><div class="axis">Alcance</div><div class="t-col">Se extiende sobre el terreno</div><div class="o-col">Solo cuerpo propio o contacto</div></div>
+    </div>
+
+    <div class="mist-compare" id="mist-compare">
+      <div class="mist-legend">
+        <span><i class="dot silver"></i> Tabatha</span>
+        <span><i class="dot black"></i> Oliver</span>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Origen</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Habilidad hereditaria propia</div>
+          <div class="mist-card black">Desecho ajeno, no le pertenece</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Color</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Plateado brillante</div>
+          <div class="mist-card black">Negro absoluto</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Control</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Voluntario</div>
+          <div class="mist-card black">Reactivo, involuntario</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Costo</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Energía mágica</div>
+          <div class="mist-card black">Estabilidad emocional</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Dirección</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Expansiva — ataca, envuelve</div>
+          <div class="mist-card black">Contractiva — protege, absorbe</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Progresión</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Se fortalece</div>
+          <div class="mist-card black">Se degrada</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Forma</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Estable, líquida y vaporosa</div>
+          <div class="mist-card black">Inestable, errática</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Alcance</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Se extiende sobre el terreno</div>
+          <div class="mist-card black">Solo cuerpo propio o contacto</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESONANCE / MERGE -->
+  <section class="resonance" id="resonance">
+    <div class="rtext">
+      <span class="eyebrow">efecto secundario — sin desbloquear</span>
+      <h2>La resonancia</h2>
+      <p>La resonancia corre en las dos direcciones. Cada activación de Oliver manda una señal mínima hacia la Bruma original, esté Tabatha donde esté — y cada vez que ella invoca la suya, algo se remueve en él: el frío que ya carga se intensifica un segundo, sin causa aparente. No alcanza para ubicarse mutuamente. Todavía. Dos fuerzas que nacieron del mismo instante, condenadas a responderse aunque estén lejos.</p>
+    </div>
+  </section>
+
+  <!-- MATCHUP -->
+  <section class="matchup" id="matchup">
+    <div class="clash-spacer" id="clash-spacer">
+      <div class="clash-cue" id="clash-cue"></div>
+    </div>
+    <div class="matchup-content">
+    <span class="eyebrow">matchup — si llegan a chocar</span>
+    <h2>Cuando las dos brumas se cruzan de verdad</h2>
+    <p class="intro">Hasta acá, resonancia a la distancia. Pero si el residuo de Oliver llega a tocar la Bruma Argéntea de frente — no un eco, la sustancia original — el enfrentamiento no se parece a nada de lo anterior.</p>
+    <div class="clash-grid">
+      <div class="clash-item">
+        <span class="clash-tag">Reconocimiento mutuo</span>
+        <p>El residuo no reacciona igual frente a la Bruma original que frente a cualquier otra magia. La reconoce. Es la misma sustancia, separada por un instante.</p>
+      </div>
+      <div class="clash-item">
+        <span class="clash-tag">Absorción amplificada</span>
+        <p>El escudo de Oliver, frente a la Bruma de Tabatha, absorbe más de lo que debería. No por fuerza propia — por origen compartido.</p>
+      </div>
+      <div class="clash-item">
+        <span class="clash-tag">Costo duplicado</span>
+        <p>Esa absorción extra no sale gratis: acelera el vacío emocional mucho más rápido que un uso normal. Podría ser el camino más corto hacia el límite absoluto que todavía nadie conoce.</p>
+      </div>
+      <div class="clash-item">
+        <span class="clash-tag">Freno involuntario</span>
+        <p>Del lado de Tabatha, atacar al residuo no se siente como atacar cualquier otro objetivo. Hay una fracción de segundo de resistencia — como si la bruma dudara antes de golpear una parte de sí misma.</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// ---------- scroll reveal ----------
+const revealTargets = document.querySelectorAll('.power-copy, .trow:not(.head), .mist-card, .clash-item');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); } });
+}, { threshold:0.22 });
+revealTargets.forEach(t=>io.observe(t));
+
+// ---------- ambient background: drifting silver / black motes ----------
+const amb = document.getElementById('ambient');
+const actx = amb.getContext('2d');
+let W, H;
+function resizeAmb(){ W = amb.width = window.innerWidth; H = amb.height = window.innerHeight; }
+resizeAmb();
+window.addEventListener('resize', resizeAmb);
+
+const motes = [];
+const MOTE_COUNT = 70;
+for(let i=0;i<MOTE_COUNT;i++){
+  const silverSide = i % 2 === 0;
+  motes.push({
+    x: silverSide ? Math.random()*0.42*window.innerWidth : window.innerWidth*0.58 + Math.random()*0.42*window.innerWidth,
+    baseY: Math.random()*window.innerHeight,
+    r: 0.6 + Math.random()*1.8,
+    // parallax factor: how strongly this mote reacts to scrolling.
+    // varied per-mote so the field has depth, but ALL of them move
+    // as soon as the page scrolls, right from the very top.
+    parallax: 0.15 + Math.random()*0.55,
+    silver: silverSide,
+    phase: Math.random()*Math.PI*2
+  });
+}
+
+let lastScrollY = window.scrollY;
+
+function drawAmbient(){
+  actx.clearRect(0,0,W,H);
+  const scrollY = window.scrollY;
+  const docH = document.documentElement.scrollHeight;
+
+  motes.forEach(m=>{
+    m.phase += 0.004;
+    // position is driven directly by scroll position (parallax),
+    // wrapping around a virtual band so it loops smoothly the whole page.
+    const band = window.innerHeight * 1.4;
+    let y = (m.baseY - scrollY * m.parallax) % band;
+    if(y < 0) y += band;
+    const x = m.x + Math.sin(m.phase)*14;
+    const alpha = 0.35 + 0.25*Math.sin(m.phase*2);
+    actx.beginPath();
+    actx.arc(x, y, m.r, 0, Math.PI*2);
+    actx.fillStyle = m.silver
+      ? `rgba(200,215,230,${alpha*0.6})`
+      : `rgba(138,51,80,${alpha*0.35})`;
+    actx.fill();
+  });
+  lastScrollY = scrollY;
+  requestAnimationFrame(drawAmbient);
+}
+drawAmbient();
+
+// ---------- metaball canvas: two powers spiraling across the whole page, converging at the resonance ----------
+const mc = document.getElementById('metaCanvas');
+const mctx = mc.getContext('2d');
+let MW, MH;
+function resizeMeta(){
+  MW = mc.width = window.innerWidth;
+  MH = mc.height = window.innerHeight;
+}
+resizeMeta();
+window.addEventListener('resize', resizeMeta);
+
+const resSection = document.getElementById('resonance');
+
+// 0 while above the resonance section, ramps 0→1 over the first stretch of it, stays 1 after.
+function sectionRaw(){
+  const rect = resSection.getBoundingClientRect();
+  const total = resSection.offsetHeight - window.innerHeight;
+  const raw = -rect.top / Math.max(total, 1);
+  return Math.min(Math.max(raw, 0), 1);
+}
+// merge completes quickly — within the first third of the section's scroll —
+// so the powers converge like a title moment, before any text appears.
+const MERGE_WINDOW = 0.32;
+function mergeProgress(raw){
+  return Math.min(raw / MERGE_WINDOW, 1);
+}
+
+const rtextEl = document.querySelector('.resonance .rtext');
+const TEXT_REVEAL_START = 0.36;
+const TEXT_REVEAL_END = 0.52;
+
+// 0 at the very top of the page, 1 at the very bottom — drives the spiral.
+function globalProgress(){
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  if(max <= 0) return 0;
+  return Math.min(Math.max(window.scrollY / max, 0), 1);
+}
+
+// small satellite motes for the resonance pulse
+const satellites = [];
+for(let i=0;i<14;i++){
+  satellites.push({ angle: Math.random()*Math.PI*2, dist: 60+Math.random()*160, speed:(0.002+Math.random()*0.004)*(Math.random()<0.5?1:-1), r:1+Math.random()*1.6 });
+}
+
+// fragments for the matchup explosion — half read as silver, half as corrupted black
+const clashSpacer = document.getElementById('clash-spacer');
+const clashCueEl = document.getElementById('clash-cue');
+const FRAGMENT_COUNT = 26;
+const fragments = [];
+for(let i=0;i<FRAGMENT_COUNT;i++){
+  fragments.push({
+    angle: Math.random()*Math.PI*2,
+    reach: 0.55 + Math.random()*0.6,
+    wobblePhase: Math.random()*Math.PI*2,
+    silver: i % 2 === 0,
+    size: 0.55 + Math.random()*0.6
+  });
+}
+
+// 0 above the clash spacer, ramps 0→1 across it, stays 1 once past it —
+// drives the erratic combat and the explosion in the matchup section.
+function matchProgress(){
+  const rect = clashSpacer.getBoundingClientRect();
+  const total = clashSpacer.offsetHeight - window.innerHeight;
+  const raw = -rect.top / Math.max(total, 1);
+  return Math.min(Math.max(raw, 0), 1);
+}
+const EXPLOSION_START = 0.55;
+const EXPLOSION_END = 0.85;
+
+const GRID = 6; // pixel block size for metaball field sampling
+const TURNS = 5; // full rotations the two powers make across the whole page
+
+function drawMeta(){
+  const raw = sectionRaw();
+  const merge = mergeProgress(raw);   // 0 = separated, 1 = fully merged (resonance)
+  const gp = globalProgress();        // drives the spiral across the entire scroll
+  const mp = matchProgress();         // 0 before the clash, 1 once it has resolved
+  mctx.clearRect(0,0,MW,MH);
+
+  // reveal the title/text only once the particles have already converged —
+  // the merge itself reads as the section's "title" moment.
+  const textOpacity = Math.min(Math.max((raw - TEXT_REVEAL_START) / (TEXT_REVEAL_END - TEXT_REVEAL_START), 0), 1);
+  rtextEl.style.opacity = textOpacity;
+  rtextEl.style.transform = `translateY(${(1-textOpacity)*22}px)`;
+
+  const cx = MW/2, cy = MH*0.30;
+  const t = performance.now()*0.001;
+
+  // chaos ramps as the merged mass destabilizes; ep drives the explosion itself.
+  const chaos = Math.min(mp / EXPLOSION_START, 1);
+  const ep = Math.min(Math.max((mp - EXPLOSION_START) / (EXPLOSION_END - EXPLOSION_START), 0), 1);
+
+  if(clashCueEl){
+    if(mp <= 0 || mp >= 1){
+      clashCueEl.style.opacity = 0;
+    } else if(ep <= 0){
+      clashCueEl.textContent = 'dejan de ser una — pelean entre sí';
+      clashCueEl.style.opacity = Math.min(chaos*1.6, 1) * (1-Math.min(ep,1));
+    } else {
+      clashCueEl.textContent = 'y eso las rompe';
+      clashCueEl.style.opacity = 4*ep*(1-ep) * 1.4;
+    }
+  }
+
+  const sizeUnit = Math.min(MW,MH);
+  let silverR = sizeUnit*0.115 + merge*sizeUnit*0.03;
+  let blackR  = sizeUnit*0.095 + merge*sizeUnit*0.025 + Math.sin(t*3)*sizeUnit*0.006;
+
+  // continuous spiral angle: the two powers keep crossing each other's path
+  // as the page scrolls, well before the final convergence.
+  const angle = gp * Math.PI * 2 * TURNS;
+
+  // "duel" dynamic: the distance between them surges and pulls back as they
+  // spiral, like two forces lunging and retreating, never quite landing a hit.
+  const baseRadius = sizeUnit * 0.30;
+  const lunge = Math.sin(angle * 1.6) * baseRadius * 0.28;
+  const rawRadius = baseRadius + lunge;
+
+  // hard safety floor: guarantees the two fields never cross the merge
+  // threshold before the resonance section actually pulls them together.
+  const safetyFloor = (silverR + blackR) * 1.35 * (1 - merge);
+  const radius = Math.max(rawRadius * (1 - merge*0.97) + 6, safetyFloor);
+
+  // slight asymmetric wobble per side so the clash reads as organic, not mechanical
+  const wobbleA = Math.sin(t*1.9) * 0.12;
+  const wobbleB = Math.cos(t*1.4) * 0.12;
+
+  // once merged, the calm holds only briefly — chaos shakes both masses apart
+  // erratically, faster and wider the more it builds, like a fight neither wins.
+  const jitterFreq = 1 + chaos*3.4;
+  const jitterAmp = chaos * sizeUnit * 0.1;
+
+  const silverBall = {
+    x: cx + Math.cos(angle + wobbleA) * radius + Math.sin(t*6.1*jitterFreq + 1.3) * jitterAmp,
+    y: cy + Math.sin(angle + wobbleA) * radius * 0.55 + Math.sin(t*0.6)*6 + Math.cos(t*7.3*jitterFreq + 0.7) * jitterAmp * 0.75,
+    r: silverR * (1 - ep)
+  };
+  const blackBall = {
+    x: cx + Math.cos(angle + Math.PI + wobbleB) * radius + Math.cos(t*8.4*jitterFreq + 2.1) * jitterAmp,
+    y: cy + Math.sin(angle + Math.PI + wobbleB) * radius * 0.55 + Math.cos(t*0.7)*8 + Math.sin(t*6.7*jitterFreq + 3.4) * jitterAmp * 0.75,
+    r: blackR * (1 - ep)
+  };
+
+  const threshold = 1.0;
+  // subtle ambient presence early on, full intensity as the merge approaches —
+  // keeps the powers visible from the very top without fighting the reading content.
+  mctx.globalAlpha = 0.3 + 0.7*merge;
+
+  for(let gy=0; gy<MH; gy+=GRID){
+    for(let gx=0; gx<MW; gx+=GRID){
+      const dxS = gx-silverBall.x, dyS = gy-silverBall.y;
+      const dxB = gx-blackBall.x, dyB = gy-blackBall.y;
+      const fieldS = (silverBall.r*silverBall.r) / (dxS*dxS + dyS*dyS + 1);
+      const fieldB = (blackBall.r*blackBall.r) / (dxB*dxB + dyB*dyB + 1);
+      const field = fieldS + fieldB;
+      if(field > threshold){
+        const wS = fieldS/field;
+        // blend color between silver-bright and corrupted black based on dominance
+        const r = Math.round(231*wS + 10*(1-wS));
+        const g = Math.round(237*wS + 4*(1-wS));
+        const b = Math.round(243*wS + 14*(1-wS));
+        const edge = field < threshold*1.35;
+        const alpha = edge ? 0.5 : 0.85;
+        mctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+        mctx.fillRect(gx,gy,GRID,GRID);
+      }
+    }
+  }
+  mctx.globalAlpha = 1;
+
+  // resonance pulse rings — only while we're still in the resonance section itself;
+  // once the clash begins, the shockwave below takes over instead.
+  if(merge > 0.55 && mp <= 0){
+    const pulseAlpha = (merge-0.55)/0.45;
+    const ringMax = sizeUnit * 0.55;
+    const ringR = sizeUnit*0.14 + ((t*sizeUnit*0.11) % ringMax);
+    mctx.beginPath();
+    mctx.arc(cx, cy, ringR, 0, Math.PI*2);
+    mctx.strokeStyle = `rgba(184,86,122,${(0.5*pulseAlpha)*(1-(ringR-sizeUnit*0.14)/ringMax)})`;
+    mctx.lineWidth = 1.2;
+    mctx.stroke();
+  }
+
+  // satellites orbiting, colored wine, representing the resonance echo — fade out
+  // quickly once the clash starts, making room for the explosion fragments.
+  const satelliteFade = 1 - Math.min(mp*2.2, 1);
+  if(satelliteFade > 0){
+    satellites.forEach(s=>{
+      s.angle += s.speed;
+      const rad = s.dist * (0.4 + 0.6*merge);
+      const sx = cx + Math.cos(s.angle)*rad;
+      const sy = cy + Math.sin(s.angle)*rad*0.6;
+      mctx.beginPath();
+      mctx.arc(sx, sy, s.r, 0, Math.PI*2);
+      mctx.fillStyle = `rgba(184,86,122,${(0.15+0.25*merge)*satelliteFade})`;
+      mctx.fill();
+    });
+  }
+
+  // explosion shockwave ring
+  if(ep > 0 && ep < 1){
+    mctx.beginPath();
+    mctx.arc(cx, cy, ep * sizeUnit * 0.5, 0, Math.PI*2);
+    mctx.strokeStyle = `rgba(240,240,246,${(1-ep)*0.55})`;
+    mctx.lineWidth = 2;
+    mctx.stroke();
+  }
+
+  // scattering fragments — both powers disintegrating outward, then fading
+  if(ep > 0){
+    const fragFade = 4*ep*(1-ep); // peaks mid-burst, gone by ep=1
+    if(fragFade > 0.01){
+      fragments.forEach(f=>{
+        const dist = ep * sizeUnit * 0.55 * f.reach;
+        const fx = cx + Math.cos(f.angle)*dist + Math.sin(t*2 + f.wobblePhase)*sizeUnit*0.015;
+        const fy = cy + Math.sin(f.angle)*dist*0.65 + Math.cos(t*2.3 + f.wobblePhase)*sizeUnit*0.015;
+        const fr = sizeUnit*0.01*f.size;
+        mctx.beginPath();
+        mctx.arc(fx, fy, fr, 0, Math.PI*2);
+        mctx.fillStyle = f.silver
+          ? `rgba(231,237,243,${fragFade*0.85})`
+          : `rgba(20,10,24,${fragFade*0.9})`;
+        mctx.fill();
+      });
+    }
+  }
+
+  requestAnimationFrame(drawMeta);
+}
+drawMeta();
+</script>
+
+</body>
+</html>
