@@ -299,6 +299,14 @@
   .clash-grid{
     display:grid; grid-template-columns:1fr 1fr; gap:1.4rem;
   }
+  .clash-group{ margin-bottom:3.4rem; }
+  .clash-group:last-child{ margin-bottom:0; }
+  .clash-subhead{
+    text-align:center; font-family:'Fraunces', serif; font-weight:600;
+    font-size:clamp(1.25rem,2.6vw,1.6rem); margin-bottom:1.5rem;
+  }
+  .clash-subhead.ally{ color:var(--silver-bright); }
+  .clash-subhead.enemy{ color:var(--wine-bright); }
   .clash-item{
     padding:1.6rem 1.7rem; border-radius:16px;
     background:linear-gradient(155deg, rgba(231,237,243,0.05), rgba(138,51,80,0.05));
@@ -306,12 +314,21 @@
     opacity:0; transform:translateY(16px);
     transition:opacity 0.6s ease, transform 0.6s ease;
   }
+  .clash-item.ally{
+    background:linear-gradient(155deg, rgba(231,237,243,0.08), rgba(159,178,194,0.03));
+    border-color:rgba(231,237,243,0.18);
+  }
+  .clash-item.enemy{
+    background:linear-gradient(155deg, rgba(20,10,24,0.55), rgba(138,51,80,0.09));
+    border-color:rgba(138,51,80,0.32);
+  }
   .clash-item.in-view{ opacity:1; transform:translateY(0); }
   .clash-tag{
     display:block; font-family:'IBM Plex Mono', monospace; font-size:0.7rem;
     letter-spacing:0.1em; text-transform:uppercase; color:var(--wine-bright);
     margin-bottom:0.6rem;
   }
+  .clash-item.ally .clash-tag{ color:var(--silver-bright); }
   .clash-item p{ color:var(--ivory-dim); font-size:0.95rem; }
   @media (max-width:820px){
     .clash-grid{ grid-template-columns:1fr; }
@@ -323,6 +340,153 @@
     .power-visual{ max-width:280px; margin:0 auto; }
     .table-wrap{ display:none; }
     .mist-compare{ display:block; }
+  }
+
+  /* ---------- ABILITIES DETAIL (ficha de poderes) ---------- */
+  .grimoire{
+    padding:8rem 6vw 9rem; max-width:1080px; margin:0 auto; position:relative; z-index:1;
+    border-radius:32px;
+    transition:background 0.8s ease;
+  }
+  .grimoire[data-theme="tabatha"]{
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 4%, rgba(231,237,243,0.10), transparent 72%),
+      radial-gradient(ellipse 65% 55% at 50% 102%, rgba(159,178,194,0.06), transparent 78%);
+  }
+  .grimoire[data-theme="oliver"]{
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 4%, rgba(138,51,80,0.18), transparent 72%),
+      radial-gradient(ellipse 65% 55% at 50% 102%, rgba(3,1,5,0.6), transparent 78%);
+  }
+  .grimoire > .eyebrow{ display:block; text-align:center; color:var(--wine-bright); margin-bottom:0.8rem; }
+  .grimoire > h2{
+    text-align:center; font-size:clamp(1.9rem,4vw,2.9rem);
+    margin-bottom:0.8rem; color:var(--ivory);
+  }
+  .grimoire > .intro{
+    max-width:56ch; margin:0 auto 3.4rem; text-align:center;
+    color:var(--ivory-dim); font-size:1.02rem;
+  }
+
+  .champ-switch{
+    display:flex; justify-content:center; gap:0.4rem; margin-bottom:3rem;
+  }
+  .champ-switch button{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase;
+    background:none; border:1px solid rgba(159,178,194,0.22); color:var(--ivory-dim);
+    padding:0.65rem 1.7rem; border-radius:999px; cursor:pointer;
+    transition:color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  }
+  .champ-switch button.active[data-c="tabatha"]{
+    color:var(--void); background:var(--silver-bright); border-color:var(--silver-bright);
+  }
+  .champ-switch button.active[data-c="oliver"]{
+    color:var(--silver-bright); background:var(--wine); border-color:var(--wine-bright);
+  }
+
+  .ability-deck{ position:relative; }
+  .ability-deck .deck-face{ display:none; }
+  .ability-deck .deck-face.active{ display:block; }
+
+  .power-head{
+    text-align:center; margin-bottom:2.2rem;
+  }
+  .power-head .p-epithet{
+    font-family:'Fraunces', serif; font-style:italic; font-weight:400;
+    font-size:1.05rem; margin-bottom:0.3rem;
+  }
+  .deck-face[data-c="tabatha"] .p-epithet{ color:var(--silver-bright); }
+  .deck-face[data-c="oliver"] .p-epithet{ color:var(--wine-bright); }
+  .power-head h3{ font-size:clamp(1.6rem,3.2vw,2.2rem); color:var(--ivory); }
+
+  .ability-row{
+    display:flex; justify-content:center; gap:1.1rem; flex-wrap:wrap;
+    margin-bottom:2.6rem;
+  }
+  .ability-icon{
+    width:76px; height:76px; border-radius:50%;
+    border:2px solid rgba(159,178,194,0.2);
+    cursor:pointer; position:relative;
+    overflow:hidden; flex:0 0 auto;
+    transition:border-color 0.4s ease, transform 0.25s ease, box-shadow 0.25s ease, background 0.4s ease;
+    background:var(--void-deep);
+  }
+  .ability-icon img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter:saturate(0.85) brightness(0.92);
+    transition:filter 0.4s ease;
+  }
+  .ability-icon:hover{ transform:translateY(-3px); }
+
+  /* section-wide theme: idle icon tint shifts silver <-> dark veneno */
+  .grimoire[data-theme="tabatha"] .ability-icon{ border-color:rgba(231,237,243,0.22); }
+  .grimoire[data-theme="tabatha"] .ability-icon img{ filter:saturate(0.92) brightness(1.02); }
+  .grimoire[data-theme="oliver"] .ability-icon{ border-color:rgba(138,51,80,0.4); background:var(--corrupt-deep); }
+  .grimoire[data-theme="oliver"] .ability-icon img{ filter:saturate(0.6) brightness(0.76) contrast(1.1); }
+
+  .deck-face[data-c="tabatha"] .ability-icon.active{
+    border-color:var(--silver-bright);
+    box-shadow:0 0 18px rgba(231,237,243,0.35);
+  }
+  .deck-face[data-c="oliver"] .ability-icon.active{
+    border-color:var(--wine-bright);
+    box-shadow:0 0 18px rgba(184,86,122,0.4);
+  }
+  .ability-icon.active img{ filter:saturate(1) brightness(1.08) !important; }
+
+  .ability-panel{
+    display:grid; grid-template-columns:220px 1fr; gap:2.2rem; align-items:center;
+    border:1px solid rgba(159,178,194,0.16);
+    border-radius:20px;
+    padding:2.2rem 2.4rem;
+    position:relative; overflow:hidden;
+    transition:background 0.5s ease, border-color 0.5s ease;
+  }
+  .grimoire[data-theme="tabatha"] .ability-panel{
+    background:linear-gradient(155deg, rgba(231,237,243,0.08), rgba(159,178,194,0.03));
+    border-color:rgba(231,237,243,0.2);
+  }
+  .grimoire[data-theme="oliver"] .ability-panel{
+    background:linear-gradient(155deg, rgba(20,10,24,0.65), rgba(138,51,80,0.09));
+    border-color:rgba(138,51,80,0.32);
+  }
+  .ability-panel .panel-art{
+    width:100%; aspect-ratio:1/1; border-radius:14px; overflow:hidden;
+    border:1px solid rgba(159,178,194,0.18);
+  }
+  .ability-panel .panel-art img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition:filter 0.5s ease;
+  }
+  .grimoire[data-theme="tabatha"] .panel-art img{ filter:saturate(0.92) brightness(1.02); }
+  .grimoire[data-theme="oliver"] .panel-art img{ filter:saturate(0.58) brightness(0.74) contrast(1.12); }
+
+  .ability-tag{
+    display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:0.68rem;
+    letter-spacing:0.12em; text-transform:uppercase;
+    padding:0.3rem 0.85rem; border-radius:999px; margin-bottom:1rem;
+  }
+  .ability-tag:empty{ display:none; }
+  .deck-face[data-c="tabatha"] .ability-tag{ color:var(--void); background:var(--silver-bright); }
+  .deck-face[data-c="oliver"] .ability-tag{ color:var(--silver-bright); background:var(--wine); }
+  .ability-title{ font-size:clamp(1.3rem,2.6vw,1.7rem); color:var(--ivory); margin-bottom:0.8rem; }
+  .ability-desc{ color:var(--ivory-dim); font-size:0.98rem; max-width:56ch; }
+  .ability-desc .sub{
+    display:block; margin-top:0.9rem; font-family:'Fraunces', serif; font-style:italic;
+    color:var(--ivory); opacity:0.85; font-size:0.94rem;
+  }
+
+  @media (max-width:720px){
+    .ability-panel{ grid-template-columns:1fr; padding:1.8rem 1.6rem; }
+    .ability-panel .panel-art{ max-width:200px; margin:0 auto; }
+    .ability-row{ flex-wrap:nowrap; gap:0.6rem; overflow-x:auto; padding:0 0.2rem 0.4rem; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .ability-row::-webkit-scrollbar{ display:none; }
+    .ability-icon{ width:58px; height:58px; }
+  }
+  @media (max-width:420px){
+    .ability-icon{ width:50px; height:50px; }
+    .ability-row{ gap:0.45rem; }
   }
 </style>
 </head>
@@ -341,7 +505,7 @@
       <span class="amp">&</span>
       <span class="black-word">Residuo</span>
     </h1>
-    <p class="subtitle">Una se hereda. La otra no debería existir. Dos fichas, un mismo origen — bajá para ver cómo se enfrentan.</p>
+    <p class="subtitle">Una se hereda entera. La otra es lo que quedó sin digerir esa noche. Dos fichas, un mismo origen — bajá para ver cómo funcionan.</p>
     <div class="scroll-cue">desplazate ↓</div>
   </section>
 
@@ -372,8 +536,8 @@
       <p class="flavor">No se activa desde cero. Se hereda entera.</p>
       <p>De sangre, no de circunstancia. <strong>Plateada, brillante, de doble estado</strong> — líquida y vapor al mismo tiempo, sin perder forma nunca.</p>
       <p>Activación voluntaria, cien por ciento. Nunca sale por reflejo ni por accidente: Tabatha la llama, y responde.</p>
-      <p>Efecto expansivo: cadenas, cuchillas, lanzas. Envuelve, atrapa, se extiende sobre el terreno. Cuanto más dura el choque, <strong>más fuerte se pone</strong> — no hay desgaste, solo acumulación.</p>
-      <p>Coste: energía mágica. Límite conocido — pasado cierto punto, ciega temporalmente a quien la invoca.</p>
+      <p>Efecto expansivo: cadenas, cuchillas, lanzas. Envuelve, atrapa, se extiende sobre el terreno. Frente a un hechizo convencional, reconoce su estructura mágica, la descompone y reutiliza parte de esa energía para reforzarse. Cuanto más dura el choque, <strong>más fuerte se pone</strong> — no hay desgaste, solo acumulación.</p>
+      <p>Coste: energía mágica y agotamiento físico. Límite conocido — pasado cierto punto, ciega temporalmente a quien la invoca.</p>
       <div class="stat-row">
         <span>Origen<b>Hereditaria</b></span>
         <span>Control<b>Voluntario</b></span>
@@ -402,22 +566,28 @@
       </svg>
     </div>
     <div class="power-copy oliver-block">
-      <span class="eyebrow">efecto no identificado — sin catalogar</span>
-      <h2>Residuo de Bruma Argéntea</h2>
-      <p class="flavor">Nadie la pidió. No tiene nombre. Igual, ahí está.</p>
-      <p>No es un poder: es un desecho. La noche del reencuentro, la Bruma Argéntea absorbió el dolor sin procesar de Oliver — Oclumancia rota, trauma crudo — y no logró digerirlo del todo. Una esquirla corrompida quedó filtrada de vuelta hacia él. <strong>No la ganó. Se le quedó alojada.</strong></p>
-      <p>Masa negra absoluta, sin brillo, alojada donde nunca debería haber un espejo de Oclumancia. Sin forma estable: <strong>pulsa</strong>, se expande y se retrae por cuenta propia, errática en su densidad.</p>
-      <p>Activación cero voluntaria. Puramente reactiva — salta ante una amenaza real o una sobrecarga emocional extrema, cuando las barreras de Oclumancia ya cedieron y no queda otra salida.</p>
+      <span class="eyebrow">residuo — sin nombre propio</span>
+      <h2>Veneno</h2>
+      <p class="flavor">No es un poder. Es lo que sobró de una noche que casi lo desborda.</p>
+      <p>No es un poder propio: es un residuo. La noche del reencuentro, Oliver tuvo un desborde de magia inestable, sin estructura definida — demasiado caótico para que la Bruma de Tabatha lo absorbiera entero. Ella hizo lo único que sabía hacer: envolverlo para que no lo dañara. Contuvo la mayor parte, pero no logró transformarla del todo. <strong>Una fracción quedó suspendida como magia sin digerir</strong>, que no le pertenecía ni a él ni a la Bruma — y al disiparse, volvió a Oliver. Ya no era la misma: había atravesado la Bruma Argéntea y se quedó con una característica nueva. Ahora responde, parcialmente, a su naturaleza protectora.</p>
+      <p>Líquido, denso, sin forma estable — a veces casi imperceptible, otras veces visible y espeso, sin que Oliver controle esa variación. <strong>Pulsa</strong>, se expande y se retrae con ritmo propio, más parecido a un organismo que a un residuo inerte. Al activarse, los ojos se le vuelven completamente negros por un instante, como un espasmo; si se sostiene más allá de eso, el negro avanza desde las puntas de los dedos hacia el resto del cuerpo — la señal de cuánto le está exigiendo el cuerpo en ese momento.</p>
+      <p>Activación cero voluntaria. Puramente reactiva: salta ante una amenaza real hacia él o hacia alguien que le importa, ante una sobrecarga emocional extrema cuando las barreras de Oclumancia ya cedieron, o por pura resonancia — cuando en algún lado Tabatha activó la Bruma, sin que haya ninguna amenaza real cerca de él.</p>
       <ul class="cap-list">
         <li>Escudo de emergencia, fino y de corta duración</li>
+        <li>Factor curativo — regenera heridas con rapidez</li>
+        <li>Cambio de forma y camuflaje, hasta cierto punto</li>
+        <li>Detección limitada de amenazas sin visión directa</li>
         <li>Absorción parcial de magia ambiental suelta</li>
       </ul>
       <ul class="cap-list negative">
-        <li>No forma cadenas, cuchillas ni lanzas</li>
-        <li>No atrapa, no se proyecta sobre el terreno</li>
+        <li>No forma armas ni ataca</li>
+        <li>No atrapa a nadie ni se proyecta como una marea sobre el terreno</li>
+        <li>Alcance exclusivamente personal — su cuerpo, o alguien que lo esté tocando</li>
       </ul>
+      <p>Se degrada con cada uso. No hay fortalecimiento posible: después de usarlo, Oliver queda más callado y distante por horas, y con usos repetidos el vacío emocional de fondo se vuelve más difícil de disimular. El costo no es mágico — es emocional. Cada activación drena su estabilidad y reabre la puerta del vacío que casi lo consumió esa primera noche.</p>
+      <p><strong>Límite absoluto: el veneno lo corroe.</strong> Si esa mancha negra llegara a cubrirlo por completo, Oliver moriría.</p>
       <div class="stat-row">
-        <span>Origen<b>Ajeno, no propio</b></span>
+        <span>Origen<b>Residuo, no propio</b></span>
         <span>Control<b>Reactivo</b></span>
         <span>Dirección<b>Contractiva</b></span>
         <span>Progresión<b>Se degrada</b></span>
@@ -438,11 +608,14 @@
       <div class="trow"><div class="axis">Origen</div><div class="t-col">Habilidad hereditaria propia</div><div class="o-col">Desecho ajeno, no le pertenece</div></div>
       <div class="trow"><div class="axis">Color</div><div class="t-col">Plateado brillante</div><div class="o-col">Negro absoluto</div></div>
       <div class="trow"><div class="axis">Control</div><div class="t-col">Voluntario</div><div class="o-col">Reactivo, involuntario</div></div>
-      <div class="trow"><div class="axis">Costo</div><div class="t-col">Energía mágica</div><div class="o-col">Estabilidad emocional</div></div>
-      <div class="trow"><div class="axis">Dirección</div><div class="t-col">Expansiva — ataca, envuelve</div><div class="o-col">Contractiva — protege, absorbe</div></div>
-      <div class="trow"><div class="axis">Con el uso</div><div class="t-col">Se fortalece</div><div class="o-col">Se degrada</div></div>
-      <div class="trow"><div class="axis">Forma</div><div class="t-col">Estable, líquida y vaporosa</div><div class="o-col">Inestable, errática</div></div>
-      <div class="trow"><div class="axis">Alcance</div><div class="t-col">Se extiende sobre el terreno</div><div class="o-col">Solo cuerpo propio o contacto</div></div>
+      <div class="trow"><div class="axis">Costo</div><div class="t-col">Energía mágica, agotamiento físico</div><div class="o-col">Estabilidad emocional, vacío</div></div>
+      <div class="trow"><div class="axis">Dirección</div><div class="t-col">Expansiva — ataca, envuelve, atrapa</div><div class="o-col">Contractiva — protege, absorbe</div></div>
+      <div class="trow"><div class="axis">Progresión</div><div class="t-col">Se fortalece con el uso</div><div class="o-col">Se degrada con el uso</div></div>
+      <div class="trow"><div class="axis">Forma</div><div class="t-col">Estable, líquida y vaporosa a la vez</div><div class="o-col">Líquida, densa, sin forma estable</div></div>
+      <div class="trow"><div class="axis">Alcance</div><div class="t-col">Se extiende sobre el terreno</div><div class="o-col">Solo el propio cuerpo o contacto directo</div></div>
+      <div class="trow"><div class="axis">Límite conocido</div><div class="t-col">Ceguera temporal</div><div class="o-col">Corrosión total del cuerpo — la muerte</div></div>
+      <div class="trow"><div class="axis">Si pelean juntos</div><div class="t-col">Ataca en el pico del enfrentamiento</div><div class="o-col">Protege desde el primer instante</div></div>
+      <div class="trow"><div class="axis">Si pelean entre sí</div><div class="t-col">Intenta reabsorber al veneno como propio</div><div class="o-col">Resiste esa absorción como una amenaza</div></div>
     </div>
 
     <div class="mist-compare" id="mist-compare">
@@ -474,47 +647,118 @@
       <div class="axis-block">
         <div class="axis-label">Costo</div>
         <div class="mist-pair">
-          <div class="mist-card silver">Energía mágica</div>
-          <div class="mist-card black">Estabilidad emocional</div>
+          <div class="mist-card silver">Energía mágica, agotamiento físico</div>
+          <div class="mist-card black">Estabilidad emocional, vacío</div>
         </div>
       </div>
       <div class="axis-block">
         <div class="axis-label">Dirección</div>
         <div class="mist-pair">
-          <div class="mist-card silver">Expansiva — ataca, envuelve</div>
+          <div class="mist-card silver">Expansiva — ataca, envuelve, atrapa</div>
           <div class="mist-card black">Contractiva — protege, absorbe</div>
         </div>
       </div>
       <div class="axis-block">
         <div class="axis-label">Progresión</div>
         <div class="mist-pair">
-          <div class="mist-card silver">Se fortalece</div>
-          <div class="mist-card black">Se degrada</div>
+          <div class="mist-card silver">Se fortalece con el uso</div>
+          <div class="mist-card black">Se degrada con el uso</div>
         </div>
       </div>
       <div class="axis-block">
         <div class="axis-label">Forma</div>
         <div class="mist-pair">
-          <div class="mist-card silver">Estable, líquida y vaporosa</div>
-          <div class="mist-card black">Inestable, errática</div>
+          <div class="mist-card silver">Estable, líquida y vaporosa a la vez</div>
+          <div class="mist-card black">Líquida, densa, sin forma estable</div>
         </div>
       </div>
       <div class="axis-block">
         <div class="axis-label">Alcance</div>
         <div class="mist-pair">
           <div class="mist-card silver">Se extiende sobre el terreno</div>
-          <div class="mist-card black">Solo cuerpo propio o contacto</div>
+          <div class="mist-card black">Solo el propio cuerpo o contacto directo</div>
         </div>
       </div>
+      <div class="axis-block">
+        <div class="axis-label">Límite conocido</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Ceguera temporal</div>
+          <div class="mist-card black">Corrosión total del cuerpo — la muerte</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Si pelean juntos</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Ataca en el pico del enfrentamiento</div>
+          <div class="mist-card black">Protege desde el primer instante</div>
+        </div>
+      </div>
+      <div class="axis-block">
+        <div class="axis-label">Si pelean entre sí</div>
+        <div class="mist-pair">
+          <div class="mist-card silver">Intenta reabsorber al veneno como propio</div>
+          <div class="mist-card black">Resiste esa absorción como una amenaza</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABILITIES DETAIL -->
+  <section class="grimoire" id="grimoire" data-theme="tabatha">
+    <span class="eyebrow">ficha de poderes</span>
+    <h2>Cómo funciona cada habilidad</h2>
+    <p class="intro">Un desglose habilidad por habilidad, del mismo modo en que se activan en el campo — tocá cada ícono para ver el detalle.</p>
+
+    <div class="champ-switch">
+      <button data-c="tabatha" class="active">Tabatha</button>
+      <button data-c="oliver">Oliver</button>
+    </div>
+
+    <div class="ability-deck">
+
+      <!-- TABATHA DECK -->
+      <div class="deck-face active" data-c="tabatha">
+        <div class="power-head">
+          <div class="p-epithet">la heredera de la niebla</div>
+          <h3>Bruma Argéntea</h3>
+        </div>
+        <div class="ability-row" data-row="tabatha"></div>
+        <div class="ability-panel" data-panel="tabatha">
+          <div class="panel-art"><img data-art alt=""></div>
+          <div class="panel-copy">
+            <span class="ability-tag" data-tag></span>
+            <h4 class="ability-title" data-title></h4>
+            <p class="ability-desc" data-desc></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- OLIVER DECK -->
+      <div class="deck-face" data-c="oliver">
+        <div class="power-head">
+          <div class="p-epithet">el escudo silencioso</div>
+          <h3>Veneno (residuo sin nombre propio)</h3>
+        </div>
+        <div class="ability-row" data-row="oliver"></div>
+        <div class="ability-panel" data-panel="oliver">
+          <div class="panel-art"><img data-art alt=""></div>
+          <div class="panel-copy">
+            <span class="ability-tag" data-tag></span>
+            <h4 class="ability-title" data-title></h4>
+            <p class="ability-desc" data-desc></p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- RESONANCE / MERGE -->
   <section class="resonance" id="resonance">
     <div class="rtext">
-      <span class="eyebrow">efecto secundario — sin desbloquear</span>
+      <span class="eyebrow">fenómeno compartido — resonancia</span>
       <h2>La resonancia</h2>
-      <p>La resonancia corre en las dos direcciones. Cada activación de Oliver manda una señal mínima hacia la Bruma original, esté Tabatha donde esté — y cada vez que ella invoca la suya, algo se remueve en él: el frío que ya carga se intensifica un segundo, sin causa aparente. No alcanza para ubicarse mutuamente. Todavía. Dos fuerzas que nacieron del mismo instante, condenadas a responderse aunque estén lejos.</p>
+      <p>Veneno y Bruma son parte de un mismo todo, aunque estén separados en dos personas distintas. Cuando Tabatha activa la Bruma, Oliver siente como si un imán tirara de él hacia ella, sin poder explicarlo — no hay nada mágico en eso, es simplemente químico. Cuando el escudo de Oliver se activa de forma involuntaria, Tabatha siente lo mismo, sin saber por qué. Y esa resonancia no se queda solo en la sensación: a veces alcanza para activar directamente el escudo de Oliver, sin ninguna amenaza real de por medio — solo porque, en algún lado, la Bruma se activó primero.</p>
     </div>
   </section>
 
@@ -524,25 +768,51 @@
       <div class="clash-cue" id="clash-cue"></div>
     </div>
     <div class="matchup-content">
-    <span class="eyebrow">matchup — si llegan a chocar</span>
-    <h2>Cuando las dos brumas se cruzan de verdad</h2>
-    <p class="intro">Hasta acá, resonancia a la distancia. Pero si el residuo de Oliver llega a tocar la Bruma Argéntea de frente — no un eco, la sustancia original — el enfrentamiento no se parece a nada de lo anterior.</p>
-    <div class="clash-grid">
-      <div class="clash-item">
-        <span class="clash-tag">Reconocimiento mutuo</span>
-        <p>El residuo no reacciona igual frente a la Bruma original que frente a cualquier otra magia. La reconoce. Es la misma sustancia, separada por un instante.</p>
+    <span class="eyebrow">interacción directa entre las dos magias</span>
+    <h2>Cuando las dos magias se tocan de verdad</h2>
+    <p class="intro">Hasta acá, resonancia a la distancia. Pero cuando el veneno de Oliver y la Bruma de Tabatha se cruzan de frente, la naturaleza de cada una decide todo lo que pasa después — y no es la misma historia si pelean del mismo lado que si chocan entre sí.</p>
+
+    <div class="clash-group">
+      <h3 class="clash-subhead ally">Si pelean juntos</h3>
+      <div class="clash-grid">
+        <div class="clash-item ally">
+          <span class="clash-tag">Reconocimiento</span>
+          <p>La Bruma reconoce la magia de Oliver como una extensión de aquello que una vez protegió. Ya no intenta absorberla ni neutralizarla — la envuelve, la estabiliza y la guía.</p>
+        </div>
+        <div class="clash-item ally">
+          <span class="clash-tag">Roles en combate</span>
+          <p>Tabatha domina el campo de batalla, inmoviliza y ataca desde varias direcciones. Oliver se sostiene en primera línea defendiendo a sus aliados, y cada barrera que crea es reforzada por la Bruma.</p>
+        </div>
+        <div class="clash-item ally">
+          <span class="clash-tag">Secuencia táctica</span>
+          <p>El escudo de Oliver arranca en su punto más fuerte y se va desgastando; la Bruma arranca floja y gana poder cuanto más dura el enfrentamiento.</p>
+        </div>
+        <div class="clash-item ally">
+          <span class="clash-tag">Orden natural</span>
+          <p>Primero Oliver, después Tabatha: él contiene el primer golpe mientras ella todavía no llegó a su pico. Cuando el choque se estira y el escudo ya empezó a gastarse, la Bruma llega a su punto más fuerte y toma la ofensiva de lleno.</p>
+        </div>
       </div>
-      <div class="clash-item">
-        <span class="clash-tag">Absorción amplificada</span>
-        <p>El escudo de Oliver, frente a la Bruma de Tabatha, absorbe más de lo que debería. No por fuerza propia — por origen compartido.</p>
-      </div>
-      <div class="clash-item">
-        <span class="clash-tag">Costo duplicado</span>
-        <p>Esa absorción extra no sale gratis: acelera el vacío emocional mucho más rápido que un uso normal. Podría ser el camino más corto hacia el límite absoluto que todavía nadie conoce.</p>
-      </div>
-      <div class="clash-item">
-        <span class="clash-tag">Freno involuntario</span>
-        <p>Del lado de Tabatha, atacar al residuo no se siente como atacar cualquier otro objetivo. Hay una fracción de segundo de resistencia — como si la bruma dudara antes de golpear una parte de sí misma.</p>
+    </div>
+
+    <div class="clash-group">
+      <h3 class="clash-subhead enemy">Si pelean entre sí</h3>
+      <div class="clash-grid">
+        <div class="clash-item enemy">
+          <span class="clash-tag">Instinto opuesto</span>
+          <p>La Bruma no reconoce al veneno por intención sino por naturaleza, y frente a él intenta hacer lo que siempre hizo con esa sustancia: reabsorberla.</p>
+        </div>
+        <div class="clash-item enemy">
+          <span class="clash-tag">Resistencia violenta</span>
+          <p>El veneno sigue siendo magia sin digerir, inestable de origen — se resiste violentamente a que lo traguen. Al mismo tiempo, reacciona a la Bruma como si fuera la amenaza que activa su escudo, e intenta contenerla.</p>
+        </div>
+        <div class="clash-item enemy">
+          <span class="clash-tag">Retroalimentación</span>
+          <p>Ninguna cede en su naturaleza: la Bruma se fortalece cuanto más dura el choque, como siempre; el veneno se degrada cada vez más rápido, como siempre. Esas dos tendencias no se equilibran — se retroalimentan.</p>
+        </div>
+        <div class="clash-item enemy">
+          <span class="clash-tag">El final</span>
+          <p>No hay un punto de equilibrio entre crecer con el conflicto y romperse con el conflicto cuando las dos fuerzas están ancladas por el mismo origen. Tarde o temprano el sistema entero cede: no queda una vencedora y una vencida, quedan dos magias que se anularon mutuamente.</p>
+        </div>
       </div>
     </div>
     </div>
@@ -551,6 +821,68 @@
 </div>
 
 <script>
+// ---------- ficha de poderes: data + render ----------
+const POWER_DATA = {
+  tabatha: [
+    { file:'pasiva-tabbie.png', tag:'Pasiva', title:'Resonancia', desc:'Cuando el escudo de Oliver se activa de forma involuntaria, Tabatha siente un tirón parecido al de un imán hacia él, sin poder explicarlo. No hay razón mágica ni emocional. Es, simplemente, químico.' },
+    { file:'q-tabbie.png', tag:'', title:'Cadena Argéntea', desc:'Lanza un proyectil de bruma cristalizada en forma de cadena o cuchilla hacia un objetivo. Ofensiva, dirigida, atraviesa el terreno hasta impactar.' },
+    { file:'w-tabbie.png', tag:'', title:'Marea que Atrapa', desc:'La bruma se extiende como una marea sobre una zona del terreno. A quien queda atrapado dentro, lo inmoviliza por un instante.' },
+    { file:'e-tabbie.png', tag:'', title:'Clones', desc:'La bruma toma forma corpórea a disposición de Tabatha — figuras que ella dirige a distancia y que combaten de forma independiente en el campo de batalla.' },
+    { file:'r-tabbie.png', tag:'Definitiva', title:'Descomposición', desc:'Activa: frente a un hechizo convencional, reconoce su estructura, lo descompone y absorbe ese poder — ganándolo temporalmente para sí misma.', sub:'Punto de Quiebre — cada absorción la acerca a la sobrecarga. Cuanto más se prolonga el choque, más fuerte se pone: no hay desgaste, hay acumulación. Pero al llegar a la sobrecarga, la bruma la ciega temporalmente.' }
+  ],
+  oliver: [
+    { file:'pasiva-oliver.png', tag:'Pasiva', title:'Resonancia', desc:'Cuando Tabatha activa la Bruma, no importa dónde esté Oliver: siente el mismo tirón magnético hacia ella. A veces esa resonancia alcanza para activar directamente su escudo, sin ninguna amenaza real de por medio — solo porque, en algún lado, ella lo activó primero.' },
+    { file:'q-oliver.png', tag:'', title:'Escudo de Emergencia', desc:'Una capa fina se forma alrededor de Oliver, o de alguien en contacto físico directo con él. Débil, de corta duración.' },
+    { file:'w-oliver.png', tag:'', title:'Camuflaje', desc:'Se vuelve completamente invisible durante un tiempo breve, y puede además alterar su apariencia o tamaño hasta cierto punto — nunca para atacar.' },
+    { file:'e-oliver.png', tag:'', title:'Factor Curativo', desc:'Regenera heridas con rapidez, e incluso puede llegar a recuperar partes dañadas del cuerpo.' },
+    { file:'r-oliver.png', tag:'Definitiva', title:'El Límite', desc:'Activa: percibe amenazas alrededor de su huésped sin visión directa y redirige hacia sí mismo los proyectiles de magia ajena que detecta — arriesgándose a una sobrecarga que podría costarle la vida.', sub:'Cada golpe redirigido y cada desborde absorbido dejan una marca: el negro avanza desde sus dedos hacia el resto del cuerpo. Si llegara a cubrirlo por completo, Oliver moriría.' }
+  ]
+};
+
+const activeAbilityIndex = { tabatha:0, oliver:0 };
+
+function renderDeck(champ){
+  const row = document.querySelector(`.ability-row[data-row="${champ}"]`);
+  const panel = document.querySelector(`.ability-panel[data-panel="${champ}"]`);
+  const abilities = POWER_DATA[champ];
+  const idx = activeAbilityIndex[champ];
+
+  row.innerHTML = '';
+  abilities.forEach((a, i)=>{
+    const btn = document.createElement('div');
+    btn.className = 'ability-icon' + (i === idx ? ' active' : '');
+    btn.innerHTML = `<img src="${a.file}" alt="${a.title}">`;
+    btn.title = a.title;
+    btn.addEventListener('click', ()=>{ activeAbilityIndex[champ] = i; renderDeck(champ); });
+    row.appendChild(btn);
+  });
+
+  const a = abilities[idx];
+  panel.querySelector('[data-art]').src = a.file;
+  panel.querySelector('[data-art]').alt = a.title;
+  panel.querySelector('[data-tag]').textContent = a.tag || '';
+  panel.querySelector('[data-title]').textContent = a.title;
+  panel.querySelector('[data-desc]').innerHTML = a.desc + (a.sub ? `<span class="sub">${a.sub}</span>` : '');
+}
+
+renderDeck('tabatha');
+renderDeck('oliver');
+
+// switch de personaje: cambia el deck visible Y el tema estético de toda
+// la sección (plateado de la Bruma <-> negro corrompido del Veneno),
+// igual que el contraste ya usado entre "Bruma Argéntea" y "Residuo de Bruma".
+const grimoireEl = document.getElementById('grimoire');
+document.querySelectorAll('.champ-switch button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.champ-switch button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelectorAll('.deck-face').forEach(f=>{
+      f.classList.toggle('active', f.dataset.c === b.dataset.c);
+    });
+    grimoireEl.setAttribute('data-theme', b.dataset.c);
+  });
+});
+
 // ---------- scroll reveal ----------
 const revealTargets = document.querySelectorAll('.power-copy, .trow:not(.head), .mist-card, .clash-item');
 const io = new IntersectionObserver((entries)=>{
@@ -711,7 +1043,7 @@ function drawMeta(){
       clashCueEl.textContent = 'dejan de ser una — pelean entre sí';
       clashCueEl.style.opacity = Math.min(chaos*1.6, 1) * (1-Math.min(ep,1));
     } else {
-      clashCueEl.textContent = 'y eso las rompe';
+      clashCueEl.textContent = 'y ninguna sale entera';
       clashCueEl.style.opacity = 4*ep*(1-ep) * 1.4;
     }
   }
